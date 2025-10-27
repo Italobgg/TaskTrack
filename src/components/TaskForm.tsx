@@ -1,21 +1,19 @@
-// src/components/TaskForm.tsx
-"use client"; // <--- Muito importante!
+"use client";
+import { useState } from "react";
 
-import { useState } from 'react';
+interface TaskFormProps {
+  onAddTask: (title: string) => void;
+}
 
-export function TaskForm() {
-  // 1. Estado para controlar o valor do input
-  const [title, setTitle] = useState('');
+export function TaskForm({ onAddTask }: TaskFormProps) {
+  const [title, setTitle] = useState("");
 
-  // 2. Função para lidar com o submit (por enquanto, só previne o padrão)
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); // Impede o recarregamento da página
-    if (!title.trim()) return; // Não adiciona se estiver vazio
+    e.preventDefault();
+    if (!title.trim()) return;
+    onAddTask(title);
 
-    console.log("Nova tarefa:", title);
-    // (Aqui, no futuro, vamos chamar a função para adicionar a tarefa)
-
-    setTitle(''); // Limpa o input após adicionar
+    setTitle("");
   };
 
   return (

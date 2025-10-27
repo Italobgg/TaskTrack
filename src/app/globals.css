@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* ISSO DEVE SER APAGADO (exemplo do que pode ter sobrado) */
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
