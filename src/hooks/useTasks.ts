@@ -1,7 +1,10 @@
 "use client";
-import { useState } from "react";
-import { v4 as uuidv4 } from "uuid"; // Importa a função de gerar ID
+
+import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { Task } from "@/src/types/Task";
+
+const TASKS_STORAGE_KEY = "tasktrack:tasks";
 
 interface UseTasksReturn {
   tasks: Task[];
@@ -11,6 +14,31 @@ interface UseTasksReturn {
 export function useTasks(): UseTasksReturn {
   const [tasks, setTasks] = useState<Task[]>([]);
 
+  useEffect(() => {
+    try {
+      const storedTasks = localStorage.getItem(TASKS_STORAGE_KEY);
+      if (storedTasks) {
+        const loadedTasks = JSON.parse(storedTasks).map((task: Task) => ({
+          ...task,
+          createdAt: new Date(task.createdAt),
+        }));
+        setTasks(loadedTasks);
+      }
+    } catch (error) {
+      console.error("Falha ao carregar tarefas:", error);
+    }
+  }, []);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const dataToStore = JSON.stringify(tasks);
+        localStorage.setItem(TASKS_STORAGE_KEY, dataToStore);
+      } catch (error) {
+        console.error("Falha ao salvar tarefas:", error);
+      }
+    }
+  }, [tasks]);
+
   const addTask = (title: string) => {
     const newTask: Task = {
       id: uuidv4(),
@@ -18,7 +46,6 @@ export function useTasks(): UseTasksReturn {
       isCompleted: false,
       createdAt: new Date(),
     };
-
     setTasks((prevTasks) => [...prevTasks, newTask]);
   };
 
