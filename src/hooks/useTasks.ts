@@ -9,6 +9,8 @@ const TASKS_STORAGE_KEY = "tasktrack:tasks";
 interface UseTasksReturn {
   tasks: Task[];
   addTask: (title: string) => void;
+  toggleTask: (id: string) => void;
+  deleteTask: (id: string) => void;
 }
 
 export function useTasks(): UseTasksReturn {
@@ -28,6 +30,7 @@ export function useTasks(): UseTasksReturn {
       console.error("Falha ao carregar tarefas:", error);
     }
   }, []);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
@@ -49,8 +52,22 @@ export function useTasks(): UseTasksReturn {
     setTasks((prevTasks) => [...prevTasks, newTask]);
   };
 
+  const toggleTask = (id: string) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === id ? { ...task, isCompleted: !task.isCompleted } : task
+      )
+    );
+  };
+
+  const deleteTask = (id: string) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+  };
+
   return {
     tasks,
     addTask,
+    toggleTask,
+    deleteTask,
   };
 }

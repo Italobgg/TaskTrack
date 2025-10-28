@@ -1,8 +1,12 @@
-"use client"; 
+"use client";
+
 import { TaskForm } from "@/src/components/TaskForm";
-import { useTasks } from "@/src/hooks/useTasks"; 
+import { TaskList } from "@/src/components/TaskList";
+import { TaskSummary } from "@/src/components/TaskSummary";
+import { useTasks } from "@/src/hooks/useTasks";
+
 export default function Home() {
-  const { tasks, addTask } = useTasks();
+  const { tasks, addTask, toggleTask, deleteTask } = useTasks();
 
   return (
     <main className="flex min-h-screen flex-col items-center p-12 md:p-24">
@@ -11,13 +15,13 @@ export default function Home() {
 
         <TaskForm onAddTask={addTask} />
 
-        <div className="mt-10 text-zinc-400">
-          <h2 className="text-lg font-semibold">Minhas Tarefas:</h2>
-          <pre className="mt-2 p-4 bg-zinc-800 rounded-md text-sm">
+        <TaskSummary tasks={tasks} />
 
-            {JSON.stringify(tasks, null, 2)}
-          </pre>
-        </div>
+        <TaskList
+          tasks={tasks}
+          onToggleTask={toggleTask}
+          onDeleteTask={deleteTask}
+        />
       </div>
     </main>
   );
